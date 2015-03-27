@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var createFuckShitUp = require('../index').create;
 var _ = require('lodash');
 
