@@ -10,7 +10,7 @@ function createFuckItUp(opts) {
   }
 
   return function fuckItUp(sentence, done) {
-    var pieces = sentence.split(/\s/g);
+    var pieces = sentence.split(/[\s^\n]/g);
     var q = queue(4);
     pieces.forEach(queueGetPOS);
 

@@ -5,6 +5,7 @@ var probable = require('probable');
 var jsonfile = require('jsonfile');
 var callBackOnNextTick = require('conform-async').callBackOnNextTick;
 var async = require('async');
+var queue = require('queue-async');
 
 var fuckItUp = createFuckItUp();
 var linesInShakespeareFile = 122645;
@@ -76,6 +77,18 @@ function cleanLine(line) {
   return line.replace('\\\'', '\'');
 }
 
+function fuckUpEachLine(lines, done) {
+  var q = queue();
+  
+  lines.forEach(queueFuckItUp);
+
+  function queueFuckItUp(line) {
+    q.defer(fuckItUp, line);
+  }
+
+  q.awaitAll(done);
+}
+
 function joinLines(lines, done) {
   done(null, lines.join('\n'));
 }
@@ -88,8 +101,8 @@ async.waterfall(
   [
     findLines,
     cleanLines,
+    fuckUpEachLine,
     joinLines,
-    fuckItUp,
     postModifiedText
   ]
 );
