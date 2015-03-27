@@ -85,6 +85,7 @@ function buildParallelSentence(probable, pieces, posReports) {
     var piece = pieces[i];
 
     var needToCapitalize = false;
+    debugger;
     if (probablyStartOfSentence(pieces, i)) {
       needToCapitalize = isCapitalized(piece);
     }
@@ -102,16 +103,14 @@ function buildParallelSentence(probable, pieces, posReports) {
       if (!repeatsThePreviousPiece(modifier, newPieces) && 
         modifier.toLowerCase() !== piece.toLowerCase()) {
 
-        if (needToCapitalize) {
+        if (hasNoLowerCase(piece)) {
+          modifier = modifier.toUpperCase();
           // Leave ALL CAPS pieces ALL CAPS. Make the modifier match.
-          if (hasNoLowerCase(piece)) {
-            modifier = modifier.toUpperCase();
-          }
-          else {
-            // Capitalize the modifier, lower case the original piece.
-            modifier = titleCaseWord(modifier);
-            piece = piece.toLowerCase();
-          }
+        }
+        else if (needToCapitalize) {
+          // Capitalize the modifier, lower case the original piece.
+          modifier = titleCaseWord(modifier);
+          piece = piece.toLowerCase();
         }
 
         newPieces.push(modifier);

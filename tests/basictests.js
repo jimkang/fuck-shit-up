@@ -54,6 +54,12 @@ var simpleTests = [
     probable: alwaysRolls0Probable,
     text: 'Hath charg\'d you should not speak together.             Exit',
     expectedResult: 'Hath charg\'d you should not fucking speak fucking together. Fucking exit'
+  },
+  {
+    testName: 'ALL CAPS modifiers that prefix ALL CAPS words',
+    probable: alwaysRolls0Probable,
+    text: 'FIRST MURDERER. I\'ll back to the Duke of Gloucester and',
+    expectedResult: 'FUCKING FIRST FUCKING MURDERER. I\'ll fucking back to the fucking Duke of fucking Gloucester and'
   }
 ];
 
