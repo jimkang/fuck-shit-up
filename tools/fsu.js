@@ -1,6 +1,5 @@
 var createFuckShitUp = require('../index').create;
 var _ = require('lodash');
-var probable = require('probable');
 
 if (process.argv.length < 3) {
   console.log('Usage: fsu "Your phrase here."');
@@ -9,9 +8,7 @@ if (process.argv.length < 3) {
 
 var phrase = process.argv[2];
 
-var fuckShitUp = createFuckShitUp({
-  probable: probable
-});
+var fuckShitUp = createFuckShitUp();
 
 fuckShitUp(phrase, displayResult);
 

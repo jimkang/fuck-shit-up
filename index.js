@@ -2,11 +2,16 @@ var WordPOS = require('wordpos');
 var wordpos = new WordPOS();
 var _ = require('lodash');
 var queue = require('queue-async');
+var defaultProbable = require('probable');
 
 function createFuckShitUp(opts) {
   var probable;
   if (opts) {
     probable = opts.probable;
+  }
+
+  if (!probable) {
+    probable = defaultProbable;
   }
 
   return function fuckShitUp(sentence, done) {
