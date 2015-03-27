@@ -29,7 +29,7 @@ test('Basic test', function basicTest(t) {
     t.ok(!error, 'No error occurred.');
     t.equal(
       result,
-      'My fucking words fly up, my thoughts fucking remain below: fucking Words without thoughts never to fucking heaven go',
+      'My fucking words fly the fuck up, my thoughts fucking remain below: fucking Words without thoughts never to fucking heaven go',
       'Text has "fuck" added to it.'
     );
   }
@@ -47,7 +47,7 @@ test('Redundancy', function redundancy(t) {
   function checkResult(error, result) {
     t.equal(
       result,
-      'Fucking fuck fucking shit up!',
+      'Fucking fuck fucking shit the fuck up!',
       'No modifier that the same as the previous word is added.'
     );
   }

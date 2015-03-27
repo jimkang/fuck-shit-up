@@ -3,6 +3,11 @@ var wordpos = new WordPOS();
 var _ = require('lodash');
 var queue = require('queue-async');
 var defaultProbable = require('probable');
+var jsonfile = require('jsonfile');
+
+var relationalPrepositions = jsonfile.readFileSync(
+  __dirname + '/data/relational-prepositions.json'
+);
 
 function createFuckShitUp(opts) {
   var probable;
@@ -30,18 +35,31 @@ function createFuckShitUp(opts) {
       partsOfSpeech.forEach(compactDict);
       done(null, buildParallelSentence(probable, pieces, partsOfSpeech));
     }
-
-    function decorateWords(partsOfSpeech) {
-      done(null, reverseDict(partsOfSpeech));
-    }
   }
 }
 
 function adaptedGetPOS(text, callback) {
   wordpos.getPOS(text, posDone);
   function posDone(result) {
+    var prep = getRelationalPreposition(text);
+    if (prep) {
+      result.relationalPrepositions = [prep];
+    }
     callback(null, result);
   }
+}
+
+// Expects piece to contain one word, along with punctuation, maybe.
+function getRelationalPreposition(piece) {
+  var prep;
+  var matches = piece.match(/\w+/);
+  if (matches.length > 0) {
+    var word = matches[0];
+    if (relationalPrepositions.indexOf(word) !== -1) {
+      prep = word;
+    }
+  }
+  return prep;
 }
 
 function compactDict(dict) {
@@ -75,7 +93,9 @@ function buildParallelSentence(probable, pieces, posReports) {
       shouldPrefix(posReport, piece)) {
 
       var modifier = 'fucking';
-      if (posReport.adverbs && !posReport.nouns && !posReport.adjectives) {
+      if ((posReport.adverbs || posReport.relationalPrepositions) && 
+        !posReport.nouns && !posReport.adjectives) {
+
         modifier = 'the fuck';
       }
 
@@ -135,14 +155,17 @@ function titleCaseWord(word){
   return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase();
 }
 
-function shouldPrefix(posReport, piece) {
-  var posIsGood = (posReport.verbs && !_.contains(badBets, posReport.verbs[0])) ||
-    (posReport.adverbs && !_.contains(badBets, posReport.adverbs[0])) ||
-    (posReport.nouns && !_.contains(badBets, posReport.nouns[0])) ||
-    (posReport.adjectives && !_.contains(badBets, posReport.adjectives[0]));
+var posTypes = ['verbs', 'adverbs', 'nouns', 'adjectives', 'relationalPrepositions'];
 
+function shouldPrefix(posReport, piece) {
+  function partOfSpeechIsGoodInReport(pos) {
+    return posReport[pos] && !_.contains(badBets, posReport[pos][0]);
+  }
+
+  var posIsGood = posTypes.some(partOfSpeechIsGoodInReport);
   return posIsGood && !isAStageDirection(piece);
 }
+
 
 function isAStageDirection(fragment) {
   return fragment.indexOf('[') !== -1 && fragment.indexOf(']') !== -1;
