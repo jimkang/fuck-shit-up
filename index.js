@@ -52,6 +52,11 @@ function buildParallelSentence(probable, pieces, posReports) {
   console.log(posReports);
 
   var newPieces = [];
+  var prefixedLastIteration = false;
+
+  var doNotPrefixTwoInARow = (probable.roll(2) === 0);
+  var skipTheFirstOpportunity = (probable.roll(3) === 0);
+
   for (var i = 0; i < pieces.length; ++i) {
     var posReport = posReports[i];
     var piece = pieces[i];
@@ -60,7 +65,10 @@ function buildParallelSentence(probable, pieces, posReports) {
     if (probablyStartOfSentence(pieces, i)) {
       needToCapitalize = isCapitalized(piece);
     }
-    if (shouldPrefix(posReport, piece)) {
+    if ((!prefixedLastIteration || !doNotPrefixTwoInARow) && 
+      (i !==0 || !skipTheFirstOpportunity) &&
+      shouldPrefix(posReport, piece)) {
+
       var modifier = 'fucking';
       if (posReport.adverbs) {
         modifier = 'the fuck';
@@ -78,7 +86,12 @@ function buildParallelSentence(probable, pieces, posReports) {
 
       }
       newPieces.push(modifier);
+      prefixedLastIteration = true;
     }
+    else {
+      prefixedLastIteration = false;
+    }
+
     newPieces.push(piece);
   }
   return newPieces.join(' ');

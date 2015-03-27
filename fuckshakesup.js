@@ -6,8 +6,12 @@ var jsonfile = require('jsonfile');
 var callBackOnNextTick = require('conform-async').callBackOnNextTick;
 var async = require('async');
 var queue = require('queue-async');
+var probable = require('probable');
 
-var fuckItUp = createFuckItUp();
+var fuckItUp = createFuckItUp({
+  probable: probable
+});
+
 var linesInShakespeareFile = 122645;
 
 function sampleLines(done) {
@@ -79,7 +83,7 @@ function cleanLine(line) {
 
 function fuckUpEachLine(lines, done) {
   var q = queue();
-  
+
   lines.forEach(queueFuckItUp);
 
   function queueFuckItUp(line) {

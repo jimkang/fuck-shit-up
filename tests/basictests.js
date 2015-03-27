@@ -7,7 +7,7 @@ test('Basic test', function basicTest(t) {
   var fuckItUp = createFuckItUp({
     probable: {
       roll: function mockRoll(sides) {
-        return 0;
+        return 1;
       }
     }
   });
@@ -18,7 +18,7 @@ test('Basic test', function basicTest(t) {
       t.ok(!error, 'No error occurred.');
       t.equal(
         result, 
-        'My fucking words fucking fly up, my thoughts fucking remain fucking below: fucking Words without thoughts never to fucking heaven fucking go',
+        'My fucking words fly up, my thoughts fucking remain below: fucking Words without thoughts never to fucking heaven go',
         'Text has "fuck" added to it.'
       );
     }
