@@ -1,22 +1,25 @@
 {
-  "name": "fuck-it-up",
+  "name": "fuck-shit-up",
   "version": "1.0.0",
   "description": "Does some cool things.",
   "main": "index.js",
+  "bin": {
+    "fsu" : "./tools/fsu.js"
+  },
   "scripts": {
     "test": "make test"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:jimkang/fuck-it-up.git"
+    "url": "git@github.com:jimkang/fuck-shit-up.git"
   },
   "keywords": [],
   "author": "Jim Kang",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jimkang/fuck-it-up/issues"
+    "url": "https://github.com/jimkang/fuck-shit-up/issues"
   },
-  "homepage": "https://github.com/jimkang/fuck-it-up",
+  "homepage": "https://github.com/jimkang/fuck-shit-up",
   "devDependencies": {
     "tape": "^3.0.3"
   },

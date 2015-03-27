@@ -1,10 +1,10 @@
 var test = require('tape');
-var createFuckItUp = require('../index').create;
+var createFuckShitUp = require('../index').create;
 
 test('Basic test', function basicTest(t) {
   t.plan(2);
 
-  var fuckItUp = createFuckItUp({
+  var fuckShitUp = createFuckShitUp({
     probable: {
       roll: function mockRoll(sides) {
         return 1;
@@ -12,7 +12,7 @@ test('Basic test', function basicTest(t) {
     }
   });
 
-  fuckItUp(
+  fuckShitUp(
     'My words fly up, my thoughts remain below: Words without thoughts never to heaven go',
     function checkResult(error, result) {
       t.ok(!error, 'No error occurred.');

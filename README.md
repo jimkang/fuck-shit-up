@@ -1,4 +1,4 @@
-fuck-it-up
+fuck-shit-up
 ==================
 
 This module is for something or other. For example:
@@ -10,12 +10,12 @@ Etc.!
 Installation
 ------------
 
-    npm install fuck-it-up
+    npm install fuck-shit-up
 
 Usage
 -----
 
-    var someFactory = require('fuck-it-up');
+    var someFactory = require('fuck-shit-up');
     var thing = someFactory();
     thing.use();
 

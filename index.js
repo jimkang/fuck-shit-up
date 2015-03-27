@@ -3,13 +3,13 @@ var wordpos = new WordPOS();
 var _ = require('lodash');
 var queue = require('queue-async');
 
-function createFuckItUp(opts) {
+function createFuckShitUp(opts) {
   var probable;
   if (opts) {
     probable = opts.probable;
   }
 
-  return function fuckItUp(sentence, done) {
+  return function FuckShitUp(sentence, done) {
     var pieces = sentence.split(/[\s]/g);
     var q = queue(4);
     pieces.forEach(queueGetPOS);
@@ -49,7 +49,7 @@ function compactDict(dict) {
 }
 
 function buildParallelSentence(probable, pieces, posReports) {
-  console.log(posReports);
+  // console.log(posReports);
 
   var newPieces = [];
   var prefixedLastIteration = false;
@@ -165,5 +165,5 @@ function probablyStartOfSentence(pieces, index) {
 }
 
 module.exports = {
-  create: createFuckItUp
+  create: createFuckShitUp
 };

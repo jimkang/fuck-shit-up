@@ -1,15 +1,15 @@
 HOMEDIR = $(shell pwd)
-GITDIR = /var/repos/fuck-it-up.git
+GITDIR = /var/repos/fuck-shit-up.git
 PM2 = $(HOMEDIR)/node_modules/pm2/bin/pm2
 
 test:
 	node tests/basictests.js
 
-start: start-fuck-it-up
-	$(PM2) start fuck-it-up.js --name fuck-it-up
+start: start-fuck-shit-up
+	$(PM2) start fuck-shit-up.js --name fuck-shit-up
 
 stop:
-	$(PM2) stop fuck-it-up || echo "Didn't need to stop process."
+	$(PM2) stop fuck-shit-up || echo "Didn't need to stop process."
 
 list:
 	$(PM2) list
