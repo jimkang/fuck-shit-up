@@ -13,82 +13,48 @@ var alwaysRolls0Probable = {
   }
 };
 
-test('Basic test', function basicTest(t) {
-  t.plan(2);
+function runBasicTest(opts) {
+  test(opts.testName, function basicTest(t) {
+    t.plan(2);
 
-  var fuckShitUp = createFuckShitUp({
-    probable: alwaysRolls1Probable
+    var fuckShitUp = createFuckShitUp({
+      probable: opts.probable
+    });
+
+    fuckShitUp(opts.text, checkResult);
+
+    function checkResult(error, result) {
+      t.ok(!error, 'No error occurred.');
+      t.equal(result, opts.expectedResult);
+    }
   });
+}
 
-  fuckShitUp(
-    'My words fly up, my thoughts remain below: Words without thoughts never to heaven go',
-    checkResult
-  );
-
-  function checkResult(error, result) {
-    t.ok(!error, 'No error occurred.');
-    t.equal(
-      result,
-      'My fucking words fly the fuck up, my thoughts fucking remain below: fucking Words without thoughts never to fucking heaven go',
-      'Text has "fuck" added to it.'
-    );
+var simpleTests = [
+  {
+    testName: 'Basic test',
+    probable: alwaysRolls1Probable,
+    text: 'My words fly up, my thoughts remain below: Words without thoughts never to heaven go',
+    expectedResult: 'My fucking words fly the fuck up, my thoughts fucking remain below: fucking Words without thoughts never to fucking heaven go'
+  },
+  {
+    testName: 'No modifier that the same as the previous word is added.',
+    probable: alwaysRolls0Probable,
+    text: 'Fucking fuck shit up!',
+    expectedResult: 'Fucking fuck fucking shit the fuck up!'
+  },
+  {
+    testName: 'Treats "plain" as a noun, not an adverb.',
+    probable: alwaysRolls0Probable,
+    text: 'The rain in Spain stays mainly in the plain.',
+    expectedResult: 'The fucking rain in fucking Spain fucking stays the fuck mainly in the fucking plain.'
+  },
+  {
+    testName: 'Does not choke on lots of consecutive spaces.',
+    probable: alwaysRolls0Probable,
+    text: 'Hath charg\'d you should not speak together.             Exit',
+    expectedResult: 'Hath charg\'d you should not fucking speak fucking together. Fucking exit'
   }
-});
+];
 
-test('Redundancy', function redundancy(t) {
-  t.plan(1);
-
-  var fuckShitUp = createFuckShitUp({
-    probable: alwaysRolls0Probable
-  });
-
-  fuckShitUp('Fucking fuck shit up!', checkResult);
-
-  function checkResult(error, result) {
-    t.equal(
-      result,
-      'Fucking fuck fucking shit the fuck up!',
-      'No modifier that the same as the previous word is added.'
-    );
-  }
-});
-
-test('Prioritize nounhood', function nounhood(t) {
-  t.plan(1);
-
-  var fuckShitUp = createFuckShitUp({
-    probable: alwaysRolls0Probable
-  });
-
-  fuckShitUp('The rain in Spain stays mainly in the plain.', checkResult);
-
-  function checkResult(error, result) {
-    t.equal(
-      result,
-      'The fucking rain in fucking Spain fucking stays the fuck mainly in the fucking plain.',
-      'Treats "plain" as a noun, not an adverb.'
-    );
-  }
-});
-
-
-test('Handle lots of spaces', function spaces(t) {
-  t.plan(1);
-
-  var fuckShitUp = createFuckShitUp({
-    probable: alwaysRolls0Probable
-  });
-
-  fuckShitUp(
-    'Hath charg\'d you should not speak together.             Exit',
-    checkResult
-  );
-
-  function checkResult(error, result) {
-    t.equal(
-      result,
-      'Hath charg\'d you should not fucking speak fucking together. Fucking exit',
-      'Does not choke on lots of consecutive spaces.'
-    );
-  }
-});
+simpleTests.forEach(runBasicTest);
