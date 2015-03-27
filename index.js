@@ -54,7 +54,7 @@ function buildParallelSentence(probable, pieces, posReports) {
   var newPieces = [];
   var prefixedLastIteration = false;
 
-  var doNotPrefixTwoInARow = (probable.roll(3) !== 0);
+  var prefixTwoInARow = (probable.roll(3) === 0);
   var skipTheFirstOpportunity = (probable.roll(3) === 0);
 
   for (var i = 0; i < pieces.length; ++i) {
@@ -65,7 +65,7 @@ function buildParallelSentence(probable, pieces, posReports) {
     if (probablyStartOfSentence(pieces, i)) {
       needToCapitalize = isCapitalized(piece);
     }
-    if ((!prefixedLastIteration || !doNotPrefixTwoInARow) &&
+    if ((!prefixedLastIteration || prefixTwoInARow) &&
       (i !== 0 || !skipTheFirstOpportunity) &&
       shouldPrefix(posReport, piece)) {
 

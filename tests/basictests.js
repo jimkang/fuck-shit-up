@@ -24,3 +24,27 @@ test('Basic test', function basicTest(t) {
     }
   );
 });
+
+test('Basic test', function basicTest(t) {
+  t.plan(2);
+
+  var fuckShitUp = createFuckShitUp({
+    probable: {
+      roll: function mockRoll(sides) {
+        return 1;
+      }
+    }
+  });
+
+  fuckShitUp(
+    'Fucking fuck fucking shit up!',
+    function checkResult(error, result) {
+      t.ok(!error, 'No error occurred.');
+      t.equal(
+        result, 
+        'My fucking words fly up, my thoughts fucking remain below: fucking Words without thoughts never to fucking heaven go',
+        'Text has "fuck" added to it.'
+      );
+    }
+  );
+});
