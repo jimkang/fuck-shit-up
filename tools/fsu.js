@@ -9,11 +9,11 @@ if (process.argv.length < 3) {
 
 var phrase = process.argv[2];
 
-var FuckShitUp = createFuckShitUp({
+var fuckShitUp = createFuckShitUp({
   probable: probable
 });
 
-FuckShitUp(phrase, displayResult);
+fuckShitUp(phrase, displayResult);
 
 function displayResult(error, result) {
   if (error) {

@@ -9,7 +9,7 @@ function createFuckShitUp(opts) {
     probable = opts.probable;
   }
 
-  return function FuckShitUp(sentence, done) {
+  return function fuckShitUp(sentence, done) {
     var pieces = sentence.split(/[\s]/g);
     var q = queue(4);
     pieces.forEach(queueGetPOS);
@@ -55,7 +55,7 @@ function buildParallelSentence(probable, pieces, posReports) {
   var prefixedLastIteration = false;
 
   var prefixTwoInARow = (probable.roll(3) === 0);
-  var skipTheFirstOpportunity = (probable.roll(3) === 0);
+  var skipTheFirstOpportunity = (probable.roll(3) === 3);
 
   for (var i = 0; i < pieces.length; ++i) {
     var posReport = posReports[i];
@@ -83,10 +83,12 @@ function buildParallelSentence(probable, pieces, posReports) {
           modifier = titleCaseWord(modifier);
           piece = piece.toLowerCase();
         }
-
       }
-      newPieces.push(modifier);
-      prefixedLastIteration = true;
+
+      if (!repeatsThePreviousPiece(modifier, newPieces)) {
+        newPieces.push(modifier);
+        prefixedLastIteration = true;
+      }
     }
     else {
       prefixedLastIteration = false;
@@ -162,6 +164,11 @@ function probablyStartOfSentence(pieces, index) {
     }
   }
   return probablyStart;
+}
+
+function repeatsThePreviousPiece(modifier, pieces) {
+  return pieces.length > 0 && 
+    pieces[pieces.length - 1].toLowerCase() === modifier.toLowerCase();
 }
 
 module.exports = {
