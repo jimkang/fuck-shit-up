@@ -1,7 +1,7 @@
 {
   "name": "fuck-shit-up",
   "version": "1.0.0",
-  "description": "Does some cool things.",
+  "description": "Adds \"fuck\" to sentences.",
   "main": "index.js",
   "bin": {
     "fsu" : "./tools/fsu.js"
