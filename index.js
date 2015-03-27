@@ -75,22 +75,25 @@ function buildParallelSentence(probable, pieces, posReports) {
       shouldPrefix(posReport, piece)) {
 
       var modifier = 'fucking';
-      if (posReport.adverbs) {
+      if (posReport.adverbs && !posReport.nouns && !posReport.adjectives) {
         modifier = 'the fuck';
       }
-      if (needToCapitalize) {
-        // Leave ALL CAPS pieces ALL CAPS. Make the modifier match.
-        if (hasNoLowerCase(piece)) {
-          modifier = modifier.toUpperCase();
-        }
-        else {
-          // Capitalize the modifier, lower case the original piece.
-          modifier = titleCaseWord(modifier);
-          piece = piece.toLowerCase();
-        }
-      }
 
-      if (!repeatsThePreviousPiece(modifier, newPieces)) {
+      if (!repeatsThePreviousPiece(modifier, newPieces) && 
+        modifier.toLowerCase() !== piece.toLowerCase()) {
+
+        if (needToCapitalize) {
+          // Leave ALL CAPS pieces ALL CAPS. Make the modifier match.
+          if (hasNoLowerCase(piece)) {
+            modifier = modifier.toUpperCase();
+          }
+          else {
+            // Capitalize the modifier, lower case the original piece.
+            modifier = titleCaseWord(modifier);
+            piece = piece.toLowerCase();
+          }
+        }
+
         newPieces.push(modifier);
         prefixedLastIteration = true;
       }
