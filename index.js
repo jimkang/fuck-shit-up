@@ -65,8 +65,8 @@ function buildParallelSentence(probable, pieces, posReports) {
     if (probablyStartOfSentence(pieces, i)) {
       needToCapitalize = isCapitalized(piece);
     }
-    if ((!prefixedLastIteration || !doNotPrefixTwoInARow) && 
-      (i !==0 || !skipTheFirstOpportunity) &&
+    if ((!prefixedLastIteration || !doNotPrefixTwoInARow) &&
+      (i !== 0 || !skipTheFirstOpportunity) &&
       shouldPrefix(posReport, piece)) {
 
       var modifier = 'fucking';
