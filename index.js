@@ -49,6 +49,8 @@ function compactDict(dict) {
 }
 
 function buildParallelSentence(probable, pieces, posReports) {
+  console.log(posReports);
+
   var newPieces = [];
   for (var i = 0; i < pieces.length; ++i) {
     var posReport = posReports[i];
@@ -71,9 +73,17 @@ function buildParallelSentence(probable, pieces, posReports) {
   return newPieces.join(' ');
 }
 
+var badBets = [
+  'I',
+  'May',
+  'There'
+];
+
 function shouldPrefix(posReport) {
-  return posReport.verbs || posReport.nouns || posReport.adjectives || 
-    posReport.adverbs;
+  return (posReport.verbs && !_.contains(badBets, posReport.verbs[0])) ||
+    (posReport.adverbs && !_.contains(badBets, posReport.adverbs[0])) ||
+    (posReport.nouns && !_.contains(badBets, posReport.nouns[0])) ||
+    (posReport.adjectives && !_.contains(badBets, posReport.adjectives[0]));
 }
 
 function isCapitalized(fragment) {

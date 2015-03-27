@@ -23,3 +23,6 @@ npm-install:
 	npm prune
 
 post-receive: sync-worktree-to-git npm-install stop start
+
+template-offsets:
+	node getfilelineoffsets.js data/shakespeare-pg100.txt > data/shakeslineoffsets.json
