@@ -14,15 +14,17 @@ test('Basic test', function basicTest(t) {
 
   fuckShitUp(
     'My words fly up, my thoughts remain below: Words without thoughts never to heaven go',
-    function checkResult(error, result) {
-      t.ok(!error, 'No error occurred.');
-      t.equal(
-        result, 
-        'My fucking words fly up, my thoughts fucking remain below: fucking Words without thoughts never to fucking heaven go',
-        'Text has "fuck" added to it.'
-      );
-    }
+    checkResult
   );
+
+  function checkResult(error, result) {
+    t.ok(!error, 'No error occurred.');
+    t.equal(
+      result,
+      'My fucking words fly up, my thoughts fucking remain below: fucking Words without thoughts never to fucking heaven go',
+      'Text has "fuck" added to it.'
+    );
+  }
 });
 
 test('Redundancy', function redundancy(t) {
