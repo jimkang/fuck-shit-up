@@ -1,6 +1,6 @@
 {
   "name": "fuck-shit-up",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Adds \"fuck\" to sentences.",
   "main": "index.js",
   "bin": {

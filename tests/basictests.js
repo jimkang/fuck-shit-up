@@ -70,3 +70,25 @@ test('Prioritize nounhood', function nounhood(t) {
     );
   }
 });
+
+
+test('Handle lots of spaces', function spaces(t) {
+  t.plan(1);
+
+  var fuckShitUp = createFuckShitUp({
+    probable: alwaysRolls0Probable
+  });
+
+  fuckShitUp(
+    'Hath charg\'d you should not speak together.             Exit',
+    checkResult
+  );
+
+  function checkResult(error, result) {
+    t.equal(
+      result,
+      'Hath charg\'d you should not fucking speak fucking together. Fucking exit',
+      'Does not choke on lots of consecutive spaces.'
+    );
+  }
+});

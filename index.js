@@ -20,7 +20,7 @@ function createFuckShitUp(opts) {
   }
 
   return function fuckShitUp(sentence, done) {
-    var pieces = sentence.split(/[\s]/g);
+    var pieces = _.compact(sentence.split(/[\s]/g));
     var q = queue(4);
     pieces.forEach(queueGetPOS);
 
@@ -53,7 +53,7 @@ function adaptedGetPOS(text, callback) {
 function getRelationalPreposition(piece) {
   var prep;
   var matches = piece.match(/\w+/);
-  if (matches.length > 0) {
+  if (matches && matches.length > 0) {
     var word = matches[0];
     if (relationalPrepositions.indexOf(word) !== -1) {
       prep = word;
