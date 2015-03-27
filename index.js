@@ -54,7 +54,7 @@ function buildParallelSentence(probable, pieces, posReports) {
   var newPieces = [];
   var prefixedLastIteration = false;
 
-  var doNotPrefixTwoInARow = (probable.roll(2) === 0);
+  var doNotPrefixTwoInARow = (probable.roll(3) !== 0);
   var skipTheFirstOpportunity = (probable.roll(3) === 0);
 
   for (var i = 0; i < pieces.length; ++i) {
@@ -115,7 +115,8 @@ var badBets = [
   'not',
   'it',
   'as',
-  'us'
+  'us',
+  'will'
 ];
 
 badBets = badBets.concat(badBets.map(titleCaseWord));

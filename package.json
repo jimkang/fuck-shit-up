@@ -23,8 +23,6 @@
   "dependencies": {
     "async": "^0.9.0",
     "conform-async": "^1.1.1",
-    "jsonfile": "^2.0.0",
-    "line-chomper": "^0.4.5",
     "lodash": "^3.6.0",
     "probable": "^1.4.0",
     "queue-async": "^1.0.7",

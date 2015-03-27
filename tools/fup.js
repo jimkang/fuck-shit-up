@@ -1,7 +1,6 @@
 var createFuckItUp = require('../index').create;
 var _ = require('lodash');
-// var seedrandom = require('seedrandom');
-// var createProbable = require('probable').createProbable;
+var probable = require('probable');
 
 if (process.argv.length < 3) {
   console.log('Usage: node fup.js "Your phrase here."');
@@ -10,7 +9,9 @@ if (process.argv.length < 3) {
 
 var phrase = process.argv[2];
 
-var fuckItUp = createFuckItUp();
+var fuckItUp = createFuckItUp({
+  probable: probable
+});
 
 fuckItUp(phrase, displayResult);
 
