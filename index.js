@@ -10,7 +10,7 @@ function createFuckItUp(opts) {
   }
 
   return function fuckItUp(sentence, done) {
-    var pieces = sentence.split(/[\s^\n]/g);
+    var pieces = sentence.split(/[\s]/g);
     var q = queue(4);
     pieces.forEach(queueGetPOS);
 
@@ -57,14 +57,25 @@ function buildParallelSentence(probable, pieces, posReports) {
     var piece = pieces[i];
 
     var needToCapitalize = false;
-    if (i === 0) {
+    if (probablyStartOfSentence(pieces, i)) {
       needToCapitalize = isCapitalized(piece);
     }
-    if (shouldPrefix(posReport)) {
+    if (shouldPrefix(posReport, piece)) {
       var modifier = 'fucking';
+      if (posReport.adverbs) {
+        modifier = 'the fuck';
+      }
       if (needToCapitalize) {
-        modifier = 'Fucking';
-        piece = piece.toLowerCase();
+        // Leave ALL CAPS pieces ALL CAPS. Make the modifier match.
+        if (hasNoLowerCase(piece)) {
+          modifier = modifier.toUpperCase();
+        }
+        else {
+          // Capitalize the modifier, lower case the original piece.
+          modifier = titleCaseWord(modifier);
+          piece = piece.toLowerCase();
+        }
+
       }
       newPieces.push(modifier);
     }
@@ -74,20 +85,69 @@ function buildParallelSentence(probable, pieces, posReports) {
 }
 
 var badBets = [
-  'I',
-  'May',
-  'There'
+  'i',
+  'may',
+  'there',
+  'he',
+  'she',
+  'but',
+  'and',
+  'oh',
+  'o',
+  'oh',
+  'now',
+  'in',
+  'so',
+  'on',
+  'not',
+  'it',
+  'as',
+  'us'
 ];
 
-function shouldPrefix(posReport) {
-  return (posReport.verbs && !_.contains(badBets, posReport.verbs[0])) ||
+badBets = badBets.concat(badBets.map(titleCaseWord));
+
+function titleCaseWord(word){
+  return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase();
+}
+
+function shouldPrefix(posReport, piece) {
+  var posIsGood = (posReport.verbs && !_.contains(badBets, posReport.verbs[0])) ||
     (posReport.adverbs && !_.contains(badBets, posReport.adverbs[0])) ||
     (posReport.nouns && !_.contains(badBets, posReport.nouns[0])) ||
     (posReport.adjectives && !_.contains(badBets, posReport.adjectives[0]));
+
+  return posIsGood && !isAStageDirection(piece);
+}
+
+function isAStageDirection(fragment) {
+  return fragment.indexOf('[') !== -1 && fragment.indexOf(']') !== -1;
 }
 
 function isCapitalized(fragment) {
   return fragment && fragment[0].match(/[A-Z]/);
+}
+
+function hasNoLowerCase(fragment) {
+  return fragment.toUpperCase() === fragment;
+}
+
+var endPunctuation = ['.', '?', '!'];
+
+function probablyStartOfSentence(pieces, index) {
+  var probablyStart = false;
+  if (index === 0) {
+    probablyStart = true;
+  }
+  else if (pieces.length > 1) {
+    var previousPiece = pieces[index - 1];
+    if (previousPiece.length > 1) {
+      if (_.contains(endPunctuation, previousPiece[previousPiece.length - 1])) {
+        probablyStart = true;
+      }
+    }
+  }
+  return probablyStart;
 }
 
 module.exports = {

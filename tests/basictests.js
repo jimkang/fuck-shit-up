@@ -18,7 +18,7 @@ test('Basic test', function basicTest(t) {
       t.ok(!error, 'No error occurred.');
       t.equal(
         result, 
-        'My words fly the fuck up, my thoughts remain below: Words without thoughts never to fucking heaven go',
+        'My fucking words fucking fly up, my thoughts fucking remain fucking below: fucking Words without thoughts never to fucking heaven fucking go',
         'Text has "fuck" added to it.'
       );
     }
