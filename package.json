@@ -24,12 +24,10 @@
     "tape": "^3.0.3"
   },
   "dependencies": {
-    "async": "^0.9.0",
     "conform-async": "^1.1.1",
-    "jsonfile": "^2.0.0",
     "lodash": "^3.6.0",
+    "pos": "^0.1.9",
     "probable": "^1.4.0",
-    "queue-async": "^1.0.7",
-    "wordpos": "^0.1.15"
+    "queue-async": "^1.0.7"
   }
 }

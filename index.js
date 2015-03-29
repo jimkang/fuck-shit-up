@@ -1,13 +1,75 @@
-var WordPOS = require('wordpos');
-var wordpos = new WordPOS();
+var pos = require('pos');
 var _ = require('lodash');
 var queue = require('queue-async');
 var defaultProbable = require('probable');
-var jsonfile = require('jsonfile');
+var callBackOnNextTick = require('conform-async').callBackOnNextTick;
 
-var relationalPrepositions = jsonfile.readFileSync(
-  __dirname + '/data/relational-prepositions.json'
-);
+var relationalPrepositions = [
+  "abaft",
+  "abeam",
+  "aboard",
+  "about",
+  "above",
+  "absent",
+  "across",
+  "afore",
+  "after",
+  "against",
+  "along",
+  "alongside",
+  "amid",
+  "amidst",
+  "among",
+  "amongst",
+  "anenst",
+  "apud",
+  "around",
+  "aside",
+  "astride",
+  "at",
+  "athwart",
+  "atop",
+  "before",
+  "behind",
+  "below",
+  "beneath",
+  "beside",
+  "besides",
+  "between",
+  "beyond",
+  "by",
+  "chez",
+  "down",
+  "forenenst",
+  "from",
+  "in",
+  "inside",
+  "into",
+  "near",
+  "nigh",
+  "off",
+  "on",
+  "onto",
+  "out",
+  "outside",
+  "over",
+  "past",
+  "through",
+  "thru",
+  "toward",
+  "towards",
+  "under",
+  "underneath",
+  "unto",
+  "up",
+  "upon",
+  "with",
+  "within",
+  "without"
+];
+
+var lexer = new pos.Lexer();
+var tagger = new pos.Tagger();
 
 function createFuckShitUp(opts) {
   var probable;
@@ -38,15 +100,45 @@ function createFuckShitUp(opts) {
   }
 }
 
+var posForTags = {
+  JJ: 'adjectives',
+  JJR: 'adjectives',
+  JJS: 'adjectives',
+  NN: 'nouns',
+  NNP: 'nouns',
+  NNPS: 'nouns',
+  NNS: 'nouns',
+  RB: 'adverbs',
+  RRB: 'adverbs',
+  RBS: 'adverbs',
+  VB: 'verbs',
+  VBD: 'verbs',
+  VBN: 'verbs',
+  VBP: 'verbs',
+  WRB: 'adverbs'
+};
+
 function adaptedGetPOS(text, callback) {
-  wordpos.getPOS(text, posDone);
-  function posDone(result) {
-    var prep = getRelationalPreposition(text);
-    if (prep) {
-      result.relationalPrepositions = [prep];
-    }
-    callback(null, result);
+  var words = lexer.lex(text);
+  var taggedWords = tagger.tag(words);
+  
+  var word = words[0];
+  var tag;
+  if (taggedWords.length > 0 && taggedWords[0].length > 1) {
+    tag = taggedWords[0][1];
   }
+
+  var result = {};
+  if (tag) {
+    result[posForTags[tag]] = [word];
+  }
+
+  var prep = getRelationalPreposition(word);
+  if (prep) {
+    result.relationalPrepositions = [prep];
+  }
+
+  callBackOnNextTick(callback, null, result);
 }
 
 // Expects piece to contain one word, along with punctuation, maybe.
