@@ -4,10 +4,7 @@ var _ = require('lodash');
 var queue = require('queue-async');
 var defaultProbable = require('probable');
 var jsonfile = require('jsonfile');
-
-var relationalPrepositions = jsonfile.readFileSync(
-  __dirname + '/data/relational-prepositions.json'
-);
+var getSpatialPreposition = require('get-spatial-preposition');
 
 function createFuckShitUp(opts) {
   var probable;
@@ -41,25 +38,12 @@ function createFuckShitUp(opts) {
 function adaptedGetPOS(text, callback) {
   wordpos.getPOS(text, posDone);
   function posDone(result) {
-    var prep = getRelationalPreposition(text);
+    var prep = getSpatialPreposition(text);
     if (prep) {
-      result.relationalPrepositions = [prep];
+      result.spatialPrepositions = [prep];
     }
     callback(null, result);
   }
-}
-
-// Expects piece to contain one word, along with punctuation, maybe.
-function getRelationalPreposition(piece) {
-  var prep;
-  var matches = piece.match(/\w+/);
-  if (matches && matches.length > 0) {
-    var word = matches[0];
-    if (relationalPrepositions.indexOf(word) !== -1) {
-      prep = word;
-    }
-  }
-  return prep;
 }
 
 function compactDict(dict) {
@@ -94,7 +78,7 @@ function buildParallelSentence(probable, pieces, posReports) {
       shouldPrefix(posReport, piece)) {
 
       var modifier = 'fucking';
-      if ((posReport.adverbs || posReport.relationalPrepositions) && 
+      if ((posReport.adverbs || posReport.spatialPrepositions) && 
         !posReport.nouns && !posReport.adjectives) {
 
         modifier = 'the fuck';
@@ -154,7 +138,7 @@ function titleCaseWord(word){
   return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase();
 }
 
-var posTypes = ['verbs', 'adverbs', 'nouns', 'adjectives', 'relationalPrepositions'];
+var posTypes = ['verbs', 'adverbs', 'nouns', 'adjectives', 'spatialPrepositions'];
 
 function shouldPrefix(posReport, piece) {
   function partOfSpeechIsGoodInReport(pos) {
