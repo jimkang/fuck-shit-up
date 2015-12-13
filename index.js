@@ -69,7 +69,6 @@ function buildParallelSentence(probable, pieces, posReports) {
     var piece = pieces[i];
 
     var needToCapitalize = false;
-    debugger;
     if (probablyStartOfSentence(pieces, i)) {
       needToCapitalize = isCapitalized(piece);
     }
