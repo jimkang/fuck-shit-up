@@ -34,6 +34,12 @@ Command line:
 
     fsu "The rain in Spain stays mainly in the plain."
 
+You can specify opts to `createFuckShitUp` to use alternative modifiers (e.g. 'goddamn', 'sodding'):
+
+    var fuckShitUp = createFuckShitUp({
+      useAlternativeModifiers: true
+    });
+
 Tests
 -----
 

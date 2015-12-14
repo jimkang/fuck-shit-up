@@ -10,7 +10,9 @@ if (process.argv.length < 3) {
 
 var phrase = process.argv[2];
 
-var fuckShitUp = createFuckShitUp();
+var fuckShitUp = createFuckShitUp({
+  useAlternativeModifiers: true
+});
 
 fuckShitUp(phrase, displayResult);
 

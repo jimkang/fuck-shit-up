@@ -5,15 +5,49 @@ var queue = require('queue-async');
 var defaultProbable = require('probable');
 var jsonfile = require('jsonfile');
 var getSpatialPreposition = require('get-spatial-preposition');
+var modifierLists = require('./modifiers');
 
 function createFuckShitUp(opts) {
   var probable;
+  var useAlternativeModifiers;
+
   if (opts) {
     probable = opts.probable;
+    useAlternativeModifiers = opts.useAlternativeModifiers;
   }
 
   if (!probable) {
     probable = defaultProbable;
+  }
+
+  function getModifier(targetType) {
+    var modifier;
+
+    if (useAlternativeModifiers) {
+      if (targetType === 'adverbish') {
+        modifier = probable.pickFromArray(
+          modifierLists.modifiersForAdverbishTargets
+        );
+      }
+      else if (targetType === 'noun') {
+        modifier = probable.pickFromArray(
+          modifierLists.modifiersForNounTargets
+        );
+      }
+      else {
+        modifier = probable.pickFromArray(modifierLists.modifiers);
+      }
+    }
+    else {
+      if (targetType === 'adverbish') {
+        modifier = 'the fuck';
+      }
+      else {
+        modifier = 'fucking';
+      }
+    }
+
+    return modifier;
   }
 
   return function fuckShitUp(sentence, done) {
@@ -30,7 +64,10 @@ function createFuckShitUp(opts) {
     function buildNewSentenceFromPOS(error, partsOfSpeech) {
       // getPOS never returns an error, so no need to check that.
       partsOfSpeech.forEach(compactDict);
-      done(null, buildParallelSentence(probable, pieces, partsOfSpeech));
+      done(
+        null,
+        buildParallelSentence(probable, pieces, partsOfSpeech, getModifier)
+      );
     }
   }
 }
@@ -55,11 +92,12 @@ function compactDict(dict) {
   return dict;
 }
 
-function buildParallelSentence(probable, pieces, posReports) {
+function buildParallelSentence(probable, pieces, posReports, getModifier) {
   // console.log(posReports);
 
   var newPieces = [];
   var prefixedLastIteration = false;
+  var targetType;
 
   var prefixTwoInARow = (probable.roll(3) === 0);
   var skipTheFirstOpportunity = (probable.roll(3) === 3);
@@ -76,12 +114,17 @@ function buildParallelSentence(probable, pieces, posReports) {
       (i !== 0 || !skipTheFirstOpportunity) &&
       shouldPrefix(posReport, piece)) {
 
-      var modifier = 'fucking';
-      if ((posReport.adverbs || posReport.spatialPrepositions) && 
-        !posReport.nouns && !posReport.adjectives) {
+      targetType = undefined;
 
-        modifier = 'the fuck';
+      if ((posReport.adverbs || posReport.spatialPrepositions) && 
+        !posReport.nouns && !posReport.adjectives && !posReport.verbs) {
+        targetType = 'adverbish';
       }
+      else if (posReport.nouns &&
+        !posReport.adjectives && !posReport.verbs && !posReport.adverbs) {
+        targetType = 'noun';
+      }
+      var modifier = getModifier(targetType);
 
       if (!repeatsThePreviousPiece(modifier, newPieces) && 
         modifier.toLowerCase() !== piece.toLowerCase()) {

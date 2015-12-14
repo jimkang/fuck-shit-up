@@ -1,5 +1,7 @@
 var test = require('tape');
 var createFuckShitUp = require('../index').create;
+var createProbable = require('probable').createProbable;
+var seedrandom = require('seedrandom');
 
 var alwaysRolls1Probable = {
   roll: function mockRoll(sides) {
@@ -13,12 +15,17 @@ var alwaysRolls0Probable = {
   }
 };
 
+var seededProbable = createProbable({
+  random: seedrandom('test')
+});
+
 function runBasicTest(opts) {
   test(opts.testName, function basicTest(t) {
     t.plan(2);
 
     var fuckShitUp = createFuckShitUp({
-      probable: opts.probable
+      probable: opts.probable,
+      useAlternativeModifiers: opts.useAlternativeModifiers
     });
 
     fuckShitUp(opts.text, checkResult);
@@ -60,6 +67,20 @@ var simpleTests = [
     probable: alwaysRolls0Probable,
     text: 'FIRST MURDERER. I\'ll back to the Duke of Gloucester and',
     expectedResult: 'FUCKING FIRST FUCKING MURDERER. I\'ll fucking back to the fucking Duke of fucking Gloucester and'
+  },
+  {
+    testName: 'Use alternative modifiers.',
+    useAlternativeModifiers: true,
+    probable: seededProbable,
+    text: 'The rain in Spain stays mainly in the plain.',
+    expectedResult: 'The sodding rain in god-damned Spain stays to hell mainly in the goddamn plain.'
+  },
+  {
+    testName: 'Use alternative modifiers.',
+    useAlternativeModifiers: true,
+    probable: seededProbable,
+    text: 'My words fly up, my thoughts remain below: Words without thoughts never to heaven go',
+    expectedResult: 'My shit-ass words fly to hell up, my thoughts god-damned remain below: sodding Words without thoughts never to sodding heaven go'
   }
 ];
 
