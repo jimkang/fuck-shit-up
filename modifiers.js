@@ -4,17 +4,15 @@ var modifiers = [
   'god-damned',
   'consarn',
   'motherfucking',
-  'sodding'
+  'sodding',
+
 ];
 
 var modifiersForAdverbishTargets = [
   'the fuck',
   'the goddamn',
-  'to hell',
-  'bastardly',
   'consarn-it-all',
-  'shittily',
-  'ass-first'
+  'hella'
 ];
 
 var modifiersForNounTargets = [
@@ -24,7 +22,7 @@ var modifiersForNounTargets = [
   'consarn',
   'motherfucking',
   'shit-ass',
-  'sodding',
+  'sodding'
 ];
 
 module.exports = {
