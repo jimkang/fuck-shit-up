@@ -73,14 +73,14 @@ var simpleTests = [
     useAlternativeModifiers: true,
     probable: seededProbable,
     text: 'The rain in Spain stays mainly in the plain.',
-    expectedResult: 'The sodding rain in god-damned Spain stays to hell mainly in the goddamn plain.'
+    expectedResult: 'The sodding rain in goddamn Spain stays the goddamn mainly in the goddamn plain.'
   },
   {
     testName: 'Use alternative modifiers.',
     useAlternativeModifiers: true,
     probable: seededProbable,
     text: 'My words fly up, my thoughts remain below: Words without thoughts never to heaven go',
-    expectedResult: 'My shit-ass words fly to hell up, my thoughts god-damned remain below: sodding Words without thoughts never to sodding heaven go'
+    expectedResult: 'My motherfucking words fly the goddamn up, my thoughts god-damned remain below: sodding Words without thoughts never to sodding heaven go'
   }
 ];
 

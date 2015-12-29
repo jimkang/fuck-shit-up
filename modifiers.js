@@ -4,8 +4,7 @@ var modifiers = [
   'god-damned',
   'consarn',
   'motherfucking',
-  'sodding',
-
+  'sodding'
 ];
 
 var modifiersForAdverbishTargets = [
@@ -21,7 +20,6 @@ var modifiersForNounTargets = [
   'god-damned',
   'consarn',
   'motherfucking',
-  'shit-ass',
   'sodding'
 ];
 
