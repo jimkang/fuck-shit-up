@@ -44,11 +44,13 @@ function displayResult(error, result) {
 }
 
 function makePromise(line) {
-  return new Promise(function (resolve, reject) {
-    run(line, function (error, result) {
-      displayResult(error, result);
-      if (error) reject(error);
-      else resolve(result);
-    });
-  });
+  return function() {
+		return new Promise(function (resolve, reject) {
+			run(line, function (error, result) {
+				displayResult(error, result);
+				if (error) reject(error);
+				else resolve(result);
+			});
+		});
+	};
 }
