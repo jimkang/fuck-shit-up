@@ -2,6 +2,7 @@
 
 var createFuckShitUp = require('../index').create;
 var _ = require('lodash');
+var getStdin = require('get-stdin');
 
 if (process.argv.length < 3) {
   console.log('Usage: fsu "Your phrase here."');
@@ -10,15 +11,24 @@ if (process.argv.length < 3) {
 
 var phrase = process.argv[2];
 
-var fuckShitUp = createFuckShitUp({
-  useAlternativeModifiers: true
-});
+if (phrase === '-') {
+  // pipe from stdin
+  getStdin().then(run);
+} else {
+  run(phrase);
+}
 
-fuckShitUp(phrase, displayResult);
+function run(phrase) {
+  var fuckShitUp = createFuckShitUp({
+    useAlternativeModifiers: true
+  });
 
-function displayResult(error, result) {
-  if (error) {
-    console.log(error);
+  fuckShitUp(phrase, displayResult);
+
+  function displayResult(error, result) {
+    if (error) {
+      console.log(error);
+    }
+    console.log(result);
   }
-  console.log(result);
 }
