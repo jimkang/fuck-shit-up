@@ -34,11 +34,16 @@ Command line:
 
     fsu "The rain in Spain stays mainly in the plain."
 
+or piped input (use dash `-`):
+
+    echo "The rain in Spain stays mainly in the plain." | fsu -
+
 You can specify opts to `createFuckShitUp` to use alternative modifiers (e.g. 'goddamn', 'sodding'):
 
     var fuckShitUp = createFuckShitUp({
       useAlternativeModifiers: true
     });
+
 
 Tests
 -----
