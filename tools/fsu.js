@@ -13,19 +13,22 @@ var phrase = process.argv[2];
 
 if (phrase === '-') {
   // pipe from stdin
-  getStdin().then(function(lines){
-    // execute lines in sequence
-    lines.split('\n')
-      .filter(function(line){
-        return !!line.trim();
-      })
-      .map(makePromise)
-      .reduce(function(next, fn){
-        return next = next.then(fn);
-      }, Promise.resolve());
-  });
-} else {
+  getStdin().then(runFSUOnLines);
+}
+else {
   run(phrase);
+}
+
+function runFSUOnLines(lines){
+  // execute lines in sequence
+  lines.split('\n')
+    .filter(lineIsNonWhitespace)
+    .map(makePromise)
+    .reduce(runPromise, Promise.resolve());
+}
+
+function lineIsNonWhitespace(line){
+  return !!line.trim();
 }
 
 function run(phrase, cb) {
@@ -44,13 +47,26 @@ function displayResult(error, result) {
 }
 
 function makePromise(line) {
-  return function() {
-		return new Promise(function (resolve, reject) {
-			run(line, function (error, result) {
-				displayResult(error, result);
-				if (error) reject(error);
-				else resolve(result);
-			});
-		});
+  return function createPromise() {
+		return new Promise(executeRun);
 	};
+
+  function executeRun(resolve, reject) {
+    run(line, fsuDone);
+
+    function fsuDone(error, result) {
+      displayResult(error, result);
+      if (error) {
+        reject(error);
+      }
+      else {
+        resolve(result);
+      }
+    }
+  }
+}
+
+function runPromise(promise, createNextPromise){
+  // TODO: onRejected.
+  return promise.then(createNextPromise);
 }
