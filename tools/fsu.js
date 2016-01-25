@@ -9,7 +9,8 @@ if (process.argv.length < 3) {
   process.exit();
 }
 
-var phrase = process.argv[2];
+var phrase = process.argv[2],
+  vulgar = process.argv[3] === '--vulgar';
 
 if (phrase === '-') {
   // pipe from stdin
@@ -33,7 +34,8 @@ function lineIsNonWhitespace(line){
 
 function run(phrase, cb) {
   var fuckShitUp = createFuckShitUp({
-    useAlternativeModifiers: true
+    useAlternativeModifiers: true,
+    vulgar: vulgar
   });
 
   fuckShitUp(phrase, cb || displayResult);
