@@ -11,7 +11,8 @@ var modifiersForAdverbishTargets = [
   'the fuck',
   'the goddamn',
   'consarn-it-all',
-  'hella'
+  'hella',
+  'the bollocks'
 ];
 
 var modifiersForNounTargets = [

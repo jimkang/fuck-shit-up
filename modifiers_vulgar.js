@@ -46,7 +46,6 @@ var modifiersForNounTargets = [
   'shit talking',
   'shitbrain',
   'stupid ass'
-
 ];
 
 module.exports = {
