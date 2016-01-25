@@ -5,15 +5,21 @@ var queue = require('queue-async');
 var defaultProbable = require('probable');
 var jsonfile = require('jsonfile');
 var getSpatialPreposition = require('get-spatial-preposition');
-var modifierLists = require('./modifiers');
 
 function createFuckShitUp(opts) {
   var probable;
   var useAlternativeModifiers;
+  var modifierLists;
 
   if (opts) {
     probable = opts.probable;
     useAlternativeModifiers = opts.useAlternativeModifiers;
+  }
+
+  if (useAlternativeModifiers && opts.vulgar) {
+    modifierLists = require('./modifiers_vulgar');
+  } else {
+    modifierLists = require('./modifiers');
   }
 
   if (!probable) {
