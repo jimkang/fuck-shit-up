@@ -1,23 +1,16 @@
 var WordPOS = require('wordpos');
 var wordpos = new WordPOS();
-var _ = require('lodash');
+var compact = require('lodash.compact');
+var contains = require('lodash.contains');
 var queue = require('queue-async');
 var defaultProbable = require('probable');
-var jsonfile = require('jsonfile');
 var getSpatialPreposition = require('get-spatial-preposition');
 
-function createFuckShitUp(opts) {
-  var probable;
-  var useAlternativeModifiers;
+function createFuckShitUp({ probable, customModifiers }) {
   var modifierLists;
 
-  if (opts) {
-    probable = opts.probable;
-    useAlternativeModifiers = opts.useAlternativeModifiers;
-  }
-
-  if (useAlternativeModifiers && opts.vulgar) {
-    modifierLists = require('./modifiers_vulgar');
+  if (customModifiers) {
+    modifierLists = customModifiers;
   } else {
     modifierLists = require('./modifiers');
   }
@@ -29,35 +22,20 @@ function createFuckShitUp(opts) {
   function getModifier(targetType) {
     var modifier;
 
-    if (useAlternativeModifiers) {
-      if (targetType === 'adverbish') {
-        modifier = probable.pickFromArray(
-          modifierLists.modifiersForAdverbishTargets
-        );
-      }
-      else if (targetType === 'noun') {
-        modifier = probable.pickFromArray(
-          modifierLists.modifiersForNounTargets
-        );
-      }
-      else {
-        modifier = probable.pickFromArray(modifierLists.modifiers);
-      }
+    if (targetType === 'adverbish') {
+      modifier = probable.pickFromArray(
+        modifierLists.modifiersForAdverbishTargets
+      );
+    } else if (targetType === 'noun') {
+      modifier = probable.pickFromArray(modifierLists.modifiersForNounTargets);
+    } else {
+      modifier = probable.pickFromArray(modifierLists.modifiers);
     }
-    else {
-      if (targetType === 'adverbish') {
-        modifier = 'the fuck';
-      }
-      else {
-        modifier = 'fucking';
-      }
-    }
-
     return modifier;
   }
 
   return function fuckShitUp(sentence, done) {
-    var pieces = _.compact(sentence.split(/[\s]/g));
+    var pieces = compact(sentence.split(/[\s]/g));
     var q = queue(4);
     pieces.forEach(queueGetPOS);
 
@@ -75,7 +53,7 @@ function createFuckShitUp(opts) {
         buildParallelSentence(probable, pieces, partsOfSpeech, getModifier)
       );
     }
-  }
+  };
 }
 
 function adaptedGetPOS(text, callback) {
@@ -90,7 +68,7 @@ function adaptedGetPOS(text, callback) {
 }
 
 function compactDict(dict) {
-  for (key in dict) {
+  for (var key in dict) {
     if (!dict[key] || (Array.isArray(dict[key]) && dict[key].length === 0)) {
       delete dict[key];
     }
@@ -105,8 +83,8 @@ function buildParallelSentence(probable, pieces, posReports, getModifier) {
   var prefixedLastIteration = false;
   var targetType;
 
-  var prefixTwoInARow = (probable.roll(3) === 0);
-  var skipTheFirstOpportunity = (probable.roll(3) === 3);
+  var prefixTwoInARow = probable.roll(3) === 0;
+  var skipTheFirstOpportunity = probable.roll(3) === 3;
 
   for (var i = 0; i < pieces.length; ++i) {
     var posReport = posReports[i];
@@ -116,30 +94,38 @@ function buildParallelSentence(probable, pieces, posReports, getModifier) {
     if (probablyStartOfSentence(pieces, i)) {
       needToCapitalize = isCapitalized(piece);
     }
-    if ((!prefixedLastIteration || prefixTwoInARow) &&
+    if (
+      (!prefixedLastIteration || prefixTwoInARow) &&
       (i !== 0 || !skipTheFirstOpportunity) &&
-      shouldPrefix(posReport, piece)) {
-
+      shouldPrefix(posReport, piece)
+    ) {
       targetType = undefined;
 
-      if ((posReport.adverbs || posReport.spatialPrepositions) && 
-        !posReport.nouns && !posReport.adjectives && !posReport.verbs) {
+      if (
+        (posReport.adverbs || posReport.spatialPrepositions) &&
+        !posReport.nouns &&
+        !posReport.adjectives &&
+        !posReport.verbs
+      ) {
         targetType = 'adverbish';
-      }
-      else if (posReport.nouns &&
-        !posReport.adjectives && !posReport.verbs && !posReport.adverbs) {
+      } else if (
+        posReport.nouns &&
+        !posReport.adjectives &&
+        !posReport.verbs &&
+        !posReport.adverbs
+      ) {
         targetType = 'noun';
       }
       var modifier = getModifier(targetType);
 
-      if (!repeatsThePreviousPiece(modifier, newPieces) && 
-        modifier.toLowerCase() !== piece.toLowerCase()) {
-
+      if (
+        !repeatsThePreviousPiece(modifier, newPieces) &&
+        modifier.toLowerCase() !== piece.toLowerCase()
+      ) {
         if (hasNoLowerCase(piece)) {
           modifier = modifier.toUpperCase();
           // Leave ALL CAPS pieces ALL CAPS. Make the modifier match.
-        }
-        else if (needToCapitalize) {
+        } else if (needToCapitalize) {
           // Capitalize the modifier, lower case the original piece.
           modifier = titleCaseWord(modifier);
           piece = piece.toLowerCase();
@@ -148,8 +134,7 @@ function buildParallelSentence(probable, pieces, posReports, getModifier) {
         newPieces.push(modifier);
         prefixedLastIteration = true;
       }
-    }
-    else {
+    } else {
       prefixedLastIteration = false;
     }
 
@@ -177,26 +162,31 @@ var badBets = [
   'it',
   'as',
   'us',
-  'will'
+  'will',
 ];
 
 badBets = badBets.concat(badBets.map(titleCaseWord));
 
-function titleCaseWord(word){
+function titleCaseWord(word) {
   return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase();
 }
 
-var posTypes = ['verbs', 'adverbs', 'nouns', 'adjectives', 'spatialPrepositions'];
+var posTypes = [
+  'verbs',
+  'adverbs',
+  'nouns',
+  'adjectives',
+  'spatialPrepositions',
+];
 
 function shouldPrefix(posReport, piece) {
   function partOfSpeechIsGoodInReport(pos) {
-    return posReport[pos] && !_.contains(badBets, posReport[pos][0]);
+    return posReport[pos] && !contains(badBets, posReport[pos][0]);
   }
 
   var posIsGood = posTypes.some(partOfSpeechIsGoodInReport);
   return posIsGood && !isAStageDirection(piece);
 }
-
 
 function isAStageDirection(fragment) {
   return fragment.indexOf('[') !== -1 && fragment.indexOf(']') !== -1;
@@ -216,11 +206,10 @@ function probablyStartOfSentence(pieces, index) {
   var probablyStart = false;
   if (index === 0) {
     probablyStart = true;
-  }
-  else if (pieces.length > 1) {
+  } else if (pieces.length > 1) {
     var previousPiece = pieces[index - 1];
     if (previousPiece.length > 1) {
-      if (_.contains(endPunctuation, previousPiece[previousPiece.length - 1])) {
+      if (contains(endPunctuation, previousPiece[previousPiece.length - 1])) {
         probablyStart = true;
       }
     }
@@ -229,10 +218,12 @@ function probablyStartOfSentence(pieces, index) {
 }
 
 function repeatsThePreviousPiece(modifier, pieces) {
-  return pieces.length > 0 && 
-    pieces[pieces.length - 1].toLowerCase() === modifier.toLowerCase();
+  return (
+    pieces.length > 0 &&
+    pieces[pieces.length - 1].toLowerCase() === modifier.toLowerCase()
+  );
 }
 
 module.exports = {
-  create: createFuckShitUp
+  create: createFuckShitUp,
 };

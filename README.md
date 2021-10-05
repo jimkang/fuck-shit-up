@@ -30,20 +30,21 @@ Output:
 
     The fucking rain in fucking Spain stays the fuck mainly in the fucking plain.
 
-### Alternative modifiers
+### Custom modifiers
 
-You can specify opts to `createFuckShitUp` to use alternative modifiers (e.g. 'goddamn', 'sodding'):
-
-    var fuckShitUp = createFuckShitUp({
-      useAlternativeModifiers: true
-    });
-
-Include vulgarities:
+You can pass 'customModifiers' to `createFuckShitUp` to use modifiers of your choosing. e.g.:
 
     var fuckShitUp = createFuckShitUp({
-      useAlternativeModifiers: true,
-      vulgar: true
+      customModifiers: {
+        modifiers: ['ballin\'', 'heckin\''],
+        modifiersForAdverbishTargets: ['the heck', 'the most'],
+        modifiersForNounTargets: ['good', 'outstanding'],
+      }
     });
+
+An instance created this way might modify 'The rain in Spain stays mainly in the plain.' into:
+
+> The heckin' rain in good Spain stays the heck mainly in the ballin' plain.'
 
 ### Command line:
 
